@@ -1,36 +1,55 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+Manage `kernel` and `kernel-*` packages which depend on kernel version.
+
+There are two problems which mean that it can be hard to install packages like `kernel-headers` properly: Firstly by default the kernel can change unexpectedly on reboot as CentOS installs updated `kernel` packages when available. Secondly the main CentOS repos only contain the latest versions of packages, which means `yum`/`dnf` may not be able to find `kernel-*` packages which match the installed kernel.
+
+This role fixes this by:
+- Ensuring the selected kernel version is installed, running and set as the default on boot.
+- Disabling kernel updates.
+- Installing `kernel-*` packages matching the selected kernel from CentOS Vault (archive) repos.
+
+Note that outdated kernels and other packages may have security issues or contain bugs. However some applications such as lustre servers have dependencies on specific kernel versions.
 
 Requirements
 ------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+A CentOS system. This role must be run with `become` and `gather_facts`.
 
 Role Variables
 --------------
+- `kernel_version`: Optional. Either a specific, full kernel version (e.g. '4.18.0-80.11.2.el8_0.x86_64') or 'pinned' (default) to use the currently-running kernel.
+- `kernel_pkgs`: Optional. A list of packages depending on a specific kernel version. Default `['kernel-headers']`.
+- `kernel_pkgs_state`: Optional. Either `present` (default) or `absent` to control `kernel_pkgs` install state.
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+**NB:** The kernel version must be valid for the running CentOS release.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+To install a `4.18.0-147.0.3` (for CentOS 8.1) kernel plus matching `kernel-headers` and `kernel-devel` packages:
 
     - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+      become: yes
+      tasks:
+        - import_role:
+            name: kernel_packages
+            vars:
+              kernel_version: "4.18.0-147.0.3.el8_1.x86_64"
+              kernel_pkgs:
+                - kernel-headers
+                - kernel-devel
+
 
 License
 -------
 
-BSD
+Apache 2.0
 
 Author Information
 ------------------

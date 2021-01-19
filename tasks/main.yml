@@ -31,6 +31,7 @@
 - name: Reboot if kernel updated
   reboot:
   when: grubby.changed or ansible_kernel != kernel_version # bit belt-and-braces in case somehow running kernel != default boot
+  # TODO: use stackhpc.appliances/reboot_and_wait role here
 - name: Install packages
   yum:
     name: "{{ kernel_repos[ansible_distribution_version] }}/{{ item }}-{{ kernel_version }}.rpm"
