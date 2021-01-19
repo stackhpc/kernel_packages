@@ -1,0 +1,8 @@
+---
+ # Note that even in the CentOS vault repo only the most-recent package is listed in the repo metadata, and hence installable via package name :-(
+
+kernel_repos:
+  "8.1":
+    packageurl: "https://vault.centos.org/8.1.1911/BaseOS/x86_64/os/Packages"
+    baseurl: https://vault.centos.org/8.1.1911/BaseOS/x86_64/os
+    gpgkey: https://www.centos.org/keys/RPM-GPG-KEY-CentOS-Official
