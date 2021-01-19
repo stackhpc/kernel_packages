@@ -18,8 +18,8 @@ A CentOS system. This role must be run with `become` and `gather_facts`.
 
 Role Variables
 --------------
-- `kernel_version`: Optional. Either a specific, full kernel version (e.g. '4.18.0-80.11.2.el8_0.x86_64') or 'pinned' (default) to use the currently-running kernel.
-- `kernel_pkgs`: Optional. A list of packages depending on a specific kernel version. Default `['kernel-headers']`.
+- `kernel_version`: Optional. Either a specific, full kernel version (e.g. `4.18.0-80.11.2.el8_0.x86_64`) or `pinned` (default) to use the currently-running kernel.
+- `kernel_pkgs`: Optional. A list of packages depending on a specific kernel version. Default '['kernel-headers']`.
 - `kernel_pkgs_state`: Optional. Either `present` (default) or `absent` to control `kernel_pkgs` install state.
 
 **NB:** The kernel version must be valid for the running CentOS release.
