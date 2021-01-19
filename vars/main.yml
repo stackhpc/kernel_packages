@@ -2,5 +2,7 @@
  # Note that even in the CentOS vault repo only the most-recent package is listed in the repo metadata, and hence installable via package name :-(
 
 kernel_repos:
-  "8.1":
-    packageurl: "https://vault.centos.org/8.1.1911/BaseOS/x86_64/os/Packages"
+  "7.8": "https://vault.centos.org/7.8.2003/os/x86_64/Packages"
+  "7.9": "https://vault.centos.org/7.9.2009/os/x86_64/Packages"
+  "8.1": "https://vault.centos.org/8.1.1911/BaseOS/x86_64/os/Packages"
+  "8.2": "https://vault.centos.org/8.2.2004/BaseOS/x86_64/os/Packages"
