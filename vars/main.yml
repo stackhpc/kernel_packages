@@ -3,6 +3,4 @@
 
 kernel_repos:
   "8.1":
-    packageurl: "https://vault.centos.org/8.1.1911/BaseOS/x86_64/os/Packages"
     baseurl: https://vault.centos.org/8.1.1911/BaseOS/x86_64/os
-    gpgkey: https://www.centos.org/keys/RPM-GPG-KEY-CentOS-Official

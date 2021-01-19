@@ -1,14 +1,5 @@
 ---
 
-# - name: Install Centos archive repo
-#   yum_repository:
-#     name: BaseOS-Vault
-#     file: CentOS-Base-Vault
-#     baseurl: "{{ kernel_repos[ansible_distribution_version]['baseurl'] }}"
-#     description: "CentOS-{{ ansible_distribution_version }} - Base Vault (archive)"
-#     gpgkey: "{{ kernel_repos[ansible_distribution_version]['gpgkey'] }}"
-#     enabled: yes
-
 - name: Set kernel version
   set_fact:
       kernel_version: "{{ ansible_kernel if kernel_version == 'pinned' else kernel_version }}"
@@ -17,9 +8,11 @@
 - name: Install kernel
   yum:
     name: "{{ kernel_repos[ansible_distribution_version]['packageurl'] }}/kernel-{{ kernel_version }}.rpm"
-- meta: end_play
-# name: Install kernel
-# name: Install grubby
+  register: kernel_install
+- name: Install grubby
+  yum:
+    name: grubby
+    state: present
 - name: Set specified kernel as default for boot
   grubby:
     version: "{{ uname.stdout }}"
@@ -30,6 +23,7 @@
 
 # name: Disable kernel upgrades
 # name: Reboot
+# when: kernel_install.changed
 
 
 - name: Install packages
