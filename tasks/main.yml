@@ -1,5 +1,4 @@
 ---
-
 - name: Set kernel version
   set_fact:
       kernel_version: "{{ ansible_kernel if kernel_version == 'pinned' else kernel_version }}" # TODO: document fact this gets changed if was "pinned"
@@ -14,12 +13,21 @@
 - name: Set specified kernel as default for boot
   grubby:
     version: "{{ kernel_version }}" # TODO document returns?
-  register: grubby
-- debug:
-    msg: "{{ grubby }}"
-
-
-# name: Disable kernel upgrades
+- name: "read yum.conf"
+  ini_read:
+    path: /etc/yum.conf
+    section: main
+  register: yum_conf_main
+- set_fact:
+    yum_conf_exclude: "{{ yum_conf_main.config.get('exclude', '').split() }}"
+- name: Disable kernel upgrades in yum.conf
+  ini_file:
+    path: /etc/yum.conf
+    section: main
+    option: exclude
+    value: "{{ ' '.join((yum_conf_exclude + ([] if 'kernel*' in yum_conf_exclude else ['kernel*']))) }}"
+    no_extra_spaces: yes
+    
 # name: Reboot
 # when: kernel_install.changed
 
