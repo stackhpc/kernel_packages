@@ -2,9 +2,7 @@
 
 - name: Set kernel version
   set_fact:
-      kernel_version: "{{ ansible_kernel if kernel_version == 'pinned' else kernel_version }}"
-- debug:
-    msg: "{{ kernel_version }}"
+      kernel_version: "{{ ansible_kernel if kernel_version == 'pinned' else kernel_version }}" # TODO: document fact this gets changed if was "pinned"
 - name: Install kernel
   yum:
     name: "{{ kernel_repos[ansible_distribution_version]['packageurl'] }}/kernel-{{ kernel_version }}.rpm"
@@ -15,7 +13,7 @@
     state: present
 - name: Set specified kernel as default for boot
   grubby:
-    version: "{{ uname.stdout }}"
+    version: "{{ kernel_version }}" # TODO document returns?
   register: grubby
 - debug:
     msg: "{{ grubby }}"

@@ -3,4 +3,4 @@
 
 kernel_repos:
   "8.1":
-    baseurl: https://vault.centos.org/8.1.1911/BaseOS/x86_64/os
+    packageurl: "https://vault.centos.org/8.1.1911/BaseOS/x86_64/os/Packages"
