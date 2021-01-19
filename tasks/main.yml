@@ -13,6 +13,7 @@
 - name: Set specified kernel as default for boot
   grubby:
     version: "{{ kernel_version }}" # TODO document returns?
+  register: grubby
 - name: "read yum.conf"
   ini_read:
     path: /etc/yum.conf
@@ -20,18 +21,16 @@
   register: yum_conf_main
 - set_fact:
     yum_conf_exclude: "{{ yum_conf_main.config.get('exclude', '').split() }}"
-- name: Disable kernel upgrades in yum.conf
+- name: Disable upgrades for kernel* in yum.conf
   ini_file:
     path: /etc/yum.conf
     section: main
     option: exclude
     value: "{{ ' '.join((yum_conf_exclude + ([] if 'kernel*' in yum_conf_exclude else ['kernel*']))) }}"
-    no_extra_spaces: yes
-    
-# name: Reboot
-# when: kernel_install.changed
-
-
+    no_extra_spaces: yes  
+- name: Reboot if kernel updated
+  reboot:
+  when: grubby.changed or ansible_kernel != kernel_version # bit belt-and-braces in case somehow running kernel != default boot
 - name: Install packages
   yum:
     name: "{{ kernel_repos[ansible_distribution_version]['packageurl'] }}/{{ item }}-{{ kernel_version }}.rpm"
