@@ -15,8 +15,8 @@
   - name: Get kernel-headers version
     command:
       cmd: "yum list --installed kernel-headers"
+      warn: false
     register: yum_kernel_headers
-    warn: false
   - name: Check kernel_header package is installed and version matches ORIGINAL kernel
     assert:
       that: "yum_kernel_headers.stdout_lines[1].split()[1] in original_kernel_version.stdout"
