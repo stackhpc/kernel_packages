@@ -18,6 +18,7 @@
     - name: Get original kernel version
       shell:
         cmd: "cat  /home/{{ ansible_user}}/original_kernel_version"
+      changed_when: false
       register: original_kernel_version
     # NB: above tasks done like that so only set once, even if running kernel is changed on 2nd run
     - debug:
