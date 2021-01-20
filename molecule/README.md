@@ -26,8 +26,17 @@ alaska openstack flavor list
 alaska openstack network list
 ```
 
-Using the above, copy `molecule/alaska-config.sh` and create a config file for your specific cloud. Now source that.
+Using the above, copy `molecule/alaska-config.yml` and create a config file for your specific cloud. Now source that.
 
 # Tests
 
+The following tests are defined:
 - `default`: Checks role defaults work
+
+Run tests using:
+
+```shell
+molecule --env-file molecule/alaska-config.yml test
+```
+
+or whatever your cloud config file is.
