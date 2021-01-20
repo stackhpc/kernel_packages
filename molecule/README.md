@@ -28,6 +28,8 @@ alaska openstack network list
 
 Using the above, copy `molecule/alaska-config.yml` and create a config file for your specific cloud. Now source that.
 
+**NB: At present only testing of CentOS 8.2 images is configured** TODO: FIXME:
+
 # Tests
 
 The following tests are defined:
