@@ -7,6 +7,6 @@
       shell:
         cmd: "uname -r > /home/{{ ansible_user}}/original_kernel_version"
         creates: "/home/{{ ansible_user}}/original_kernel_version"
-    - name: "Include kernel-pkgs"
+    - name: "Include kernel_packages"
       include_role:
-        name: "kernel-pkgs"
+        name: "kernel_packages"
