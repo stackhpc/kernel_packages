@@ -1,0 +1,23 @@
+---
+
+- name: Verify
+  hosts: all
+  gather_facts: true
+  tasks:
+  - name: Read original kernel version
+    command: "cat /home/{{ ansible_user}}/original_kernel_version"
+    register: original_kernel_version
+  - name: Check running kernel version matches ORIGINAL kernel
+    assert:
+      that: ansible_kernel == original_kernel_version.stdout
+      fail_msg: "running kernel {{ ansible_kernel }} differs from original kernel {{ original_kernel_version.stdout }}"
+      success_msg: "running kernel {{ ansible_kernel }} matches original kernel {{ original_kernel_version.stdout }}"
+  - name: Get kernel-headers version
+    command:
+      cmd: "yum list --installed kernel-headers"
+    register: yum_kernel_headers
+  - name: Check kernel_header package is installed and version matches ORIGINAL kernel
+    assert:
+      that: "yum_kernel_headers.stdout_lines[1].split()[1] in original_kernel_version.stdout"
+      fail_msg: "kernel-headers version {{ yum_kernel_headers.stdout_lines[1].split()[1] }} does not match original kernel {{ original_kernel_version.stdout }}"
+      fail_msg: "kernel-headers version {{ yum_kernel_headers.stdout_lines[1].split()[1] }} matches original kernel {{ original_kernel_version.stdout }}"

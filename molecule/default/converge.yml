@@ -1,0 +1,12 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+  tasks:
+    - name: Save original kernel version
+      shell:
+        cmd: "uname -r > /home/{{ ansible_user}}/original_kernel_version"
+        creates: "/home/{{ ansible_user}}/original_kernel_version"
+    - name: "Include kernel-pkgs"
+      include_role:
+        name: "kernel-pkgs"

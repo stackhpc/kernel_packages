@@ -1,0 +1,16 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: openstack
+platforms:
+  - name: molecule-kernel-pkgs
+    image: ${MOLECULE_OPENSTACK_IMAGE}
+    flavor: ${MOLECULE_OPENSTACK_FLAVOR}
+    network: ${MOLECULE_OPENSTACK_NETWORK:-molecule}
+    #fip_pool: ${MOLECULE_OPENSTACK_FIP_POOL}
+    ssh_user: ${MOLECULE_OPENSTACK_SSH_USER:-cloud-user}
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
