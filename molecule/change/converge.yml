@@ -1,0 +1,38 @@
+---
+- name: Converge
+  hosts: all
+  become: yes
+  vars:
+    kernel_vers:
+      "8.2":
+        - 4.18.0-193.1.2.el8_2.x86_64
+        - 4.18.0-193.6.3.el8_2.x86_64
+        - 4.18.0-193.14.2.el8_2.x86_64
+        - 4.18.0-193.19.1.el8_2.x86_64
+        - 4.18.0-193.28.1.el8_2.x86_64
+  tasks:
+    - name: Save original kernel version
+      shell:
+        cmd: "uname -r > /home/{{ ansible_user}}/original_kernel_version"
+        creates: "/home/{{ ansible_user}}/original_kernel_version"
+    - name: Get original kernel version
+      shell:
+        cmd: "cat  /home/{{ ansible_user}}/original_kernel_version"
+      register: original_kernel_version
+    # NB: above tasks done like that so only set once, even if running kernel is changed on 2nd run
+    - debug:
+        var: original_kernel_version
+    - name: Select first kernel version which isn't the original as new version
+      set_fact:
+        new_kernel_version: "{{ (kernel_vers[ansible_distribution_version] | difference([original_kernel_version.stdout]) | list)[0] }}"
+    - debug:
+        var: new_kernel_version
+    - name: Save new kernel version
+      shell:
+        cmd: "echo {{ new_kernel_version }} > /home/{{ ansible_user}}/new_kernel_version"
+        creates: "/home/{{ ansible_user}}/new_kernel_version"
+    - name: "Include kernel_packages"
+      include_role:
+        name: "kernel_packages"
+      vars:
+        kernel_version: "{{ new_kernel_version }}"
