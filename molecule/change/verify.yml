@@ -7,6 +7,7 @@
   - name: Read new kernel version
     command: "cat /home/{{ ansible_user}}/new_kernel_version"
     register: new_kernel_version
+    changed_when: false
   - name: Check running kernel version matches NEW kernel
     assert:
       that: ansible_kernel == new_kernel_version.stdout

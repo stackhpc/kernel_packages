@@ -1,11 +1,7 @@
 ---
-- name: Set kernel version
-  set_fact:
-      kernel_target_version: "{{ ansible_kernel if kernel_version == 'pinned' else kernel_version }}"
-      # NB: can't set `kernel_version` as import_role: var: kernel_version will have higher precedence if specified which breaks things if that's "pinned"
 - name: Get kernel dependencies
   command:
-    cmd: "yum deplist {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_target_version }}.rpm"
+    cmd: "yum deplist {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_version }}.rpm"
     warn: false
   register: kernel_deplist
   changed_when: false
@@ -20,9 +16,9 @@
   when: "'dependency: kernel-' in item" # e.g. item-> "  dependency: kernel-core-uname-r = 4.18.0-193.1.2.el8_2.x86_64"
 - name: Install kernel
   command: # for some reason the yum module sometimes thinks no change is needed!
-    cmd: "yum install -y {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_target_version }}.rpm"
+    cmd: "yum install -y {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_version }}.rpm"
     warn: false
-    creates: "/boot/vmlinuz-{{ kernel_target_version }}"
+    creates: "/boot/vmlinuz-{{ kernel_version }}"
   register: kernel_install
 - name: Install grubby
   yum:
@@ -30,7 +26,7 @@
     state: present
 - name: Set specified kernel as default for boot
   grubby:
-    version: "{{ kernel_target_version }}" # TODO document returns?
+    version: "{{ kernel_version }}" # TODO document returns?
   register: grubby
 - name: "read yum.conf"
   ini_read:
@@ -48,11 +44,11 @@
     no_extra_spaces: yes  
 - name: Reboot if kernel updated
   reboot:
-  when: grubby.changed or ansible_kernel != kernel_target_version # bit belt-and-braces in case somehow running kernel != default boot
+  when: grubby.changed or ansible_kernel != kernel_version # bit belt-and-braces in case somehow running kernel != default boot
   # TODO: use stackhpc.appliances/reboot_and_wait role here?
 - name: Install packages
   yum:
-    name: "{{ kernel_repos[ansible_distribution_version] }}/{{ item }}-{{ kernel_target_version }}.rpm"
+    name: "{{ kernel_repos[ansible_distribution_version] }}/{{ item }}-{{ kernel_version }}.rpm"
     # name: "kernel-{{ item }}-{{ ansible_kernel }}"
     state: "{{ kernel_pkgs_state }}"
     disable_gpg_check: yes # TODO: fixme

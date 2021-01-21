@@ -1,6 +1,5 @@
 ---
 
-kernel_version: 'pinned' # or <specific version> TODO: support 'upgrade' 
-kernel_pkgs:
-  - kernel-headers
+kernel_version: "{{ ansible_kernel }}"
+kernel_pkgs: []
 kernel_pkgs_state: present
