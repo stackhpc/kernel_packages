@@ -3,6 +3,8 @@
 
 kernel_repos:
   "7.8": "https://vault.centos.org/7.8.2003/os/x86_64/Packages"
-  "7.9": "https://vault.centos.org/7.9.2009/os/x86_64/Packages"
+  "7.9": "http://mirror.centos.org/centos/7.9.2009/os/x86_64/Packages"
+  "8.0": "https://vault.centos.org/8.0.1905/BaseOS/x86_64/os/Packages"
   "8.1": "https://vault.centos.org/8.1.1911/BaseOS/x86_64/os/Packages"
   "8.2": "https://vault.centos.org/8.2.2004/BaseOS/x86_64/os/Packages"
+  "8.3": "http://mirror.centos.org/centos/8.3.2011/BaseOS/x86_64/os/Packages"

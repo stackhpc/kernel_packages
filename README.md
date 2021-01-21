@@ -8,17 +8,18 @@ There are two problems which mean that it can be hard to install packages like `
 This role fixes this by:
 - Ensuring the selected kernel version is installed, running and set as the default on boot.
 - Disabling kernel updates.
-- Installing `kernel-*` packages matching the selected kernel from CentOS Vault (archive) repos.
+- Installing `kernel-*` packages matching the selected kernel from either the normal or CentOS Vault (archive) repos if necessary.
 
-Note that outdated kernels and other packages may have security issues or contain bugs. However some applications such as lustre servers have dependencies on specific kernel versions.
+Note that outdated kernels and other packages may have security issues or contain bugs. However some applications such as lustre servers may require specific kernel versions.
 
 Requirements
 ------------
-A CentOS system. This role must be run with `become` and `gather_facts`.
+A CentOS 7.8 - 8.3 (inclusive) system. This role must be run with `become` and `gather_facts`.
 
 Role Variables
 --------------
-- `kernel_version`: Optional. Either a specific, full kernel version (e.g. `4.18.0-80.11.2.el8_0.x86_64`) or `pinned` (default) to use the currently-running kernel.
+- `kernel_version`: Optional. Either a specific, full kernel version (e.g. `4.18.0-80.11.2.el8_0.x86_64`) or `pinned` (default) to use the currently-running kernel. Note that kernel versions
+  must be appropriate for the running `major.minor` CentOS release.
 - `kernel_pkgs`: Optional. A list of packages depending on a specific kernel version. Default `['kernel-headers']`.
 - `kernel_pkgs_state`: Optional. Either `present` (default) or `absent` to control `kernel_pkgs` install state.
 
