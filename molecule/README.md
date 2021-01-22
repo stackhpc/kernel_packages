@@ -33,12 +33,14 @@ Using the above, copy `molecule/alaska-config.yml` and create a config file for 
 # Tests
 
 The following tests are defined:
-- `default`: Checks role defaults work
+- `default`: Checks role defaults work, i.e. don't change kernel version (just pin etc), no other packages installed
+- `change`: Change kernel version and install a matching package
+- `nochange`: Don't change kernel version but install a matching package
 
 Run tests using:
 
 ```shell
-molecule --env-file molecule/alaska-config.yml test
+molecule --env-file molecule/alaska-config.yml test --all
 ```
 
-or whatever your cloud config file is.
+replacing the env-file path with whatever your cloud config file is.

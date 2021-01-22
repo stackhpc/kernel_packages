@@ -1,25 +1,28 @@
 ---
-- name: Get kernel dependencies
-  command:
-    cmd: "yum deplist {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_version }}.rpm"
-    warn: false
-  register: kernel_deplist
-  changed_when: false
-- name: Install kernel-* dependencies
-  # NB: assumes they're in the same repo!
-  command:
-    cmd: "yum install -y {{ kernel_repos[ansible_distribution_version] }}/{{ item.split()[1] | replace('-uname-r', '') + '-' + item.split()[3] + '.rpm'}}" # e.g. -> ".../kernel-core-4.18.0-193.1.2.el8_2.x86_64"
-    warn: false
-  register: yum_kernel_deps
-  loop: "{{ kernel_deplist.stdout_lines }}" 
-  changed_when: "'is already installed.' not in yum_kernel_deps.stdout"
-  when: "'dependency: kernel-' in item" # e.g. item-> "  dependency: kernel-core-uname-r = 4.18.0-193.1.2.el8_2.x86_64"
-- name: Install kernel
-  command: # for some reason the yum module sometimes thinks no change is needed!
-    cmd: "yum install -y {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_version }}.rpm"
-    warn: false
-    creates: "/boot/vmlinuz-{{ kernel_version }}"
-  register: kernel_install
+- block:
+  - name: Get kernel dependencies
+    command:
+      cmd: "yum deplist {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_version }}.rpm"
+      warn: false
+    register: kernel_deplist
+    changed_when: false
+  - name: Install kernel-* dependencies
+    # NB: assumes they're in the same repo!
+    command:
+      cmd: "yum install -y {{ kernel_repos[ansible_distribution_version] }}/{{ item.split()[1] | replace('-uname-r', '') + '-' + item.split()[3] + '.rpm'}}" # e.g. -> ".../kernel-core-4.18.0-193.1.2.el8_2.x86_64"
+      warn: false
+    register: yum_kernel_deps
+    loop: "{{ kernel_deplist.stdout_lines }}" 
+    changed_when: "'is already installed.' not in yum_kernel_deps.stdout"
+    when: "'dependency: kernel-' in item" # e.g. item-> "  dependency: kernel-core-uname-r = 4.18.0-193.1.2.el8_2.x86_64"
+  - name: Install kernel
+    command: # for some reason the yum module sometimes thinks no change is needed!
+      cmd: "yum install -y {{ kernel_repos[ansible_distribution_version] }}/kernel-{{ kernel_version }}.rpm"
+      warn: false
+      creates: "/boot/vmlinuz-{{ kernel_version }}"
+    register: kernel_install
+  when: ansible_kernel != kernel_version # means that as long as not changing the kernel we don't actually need to find the kernel in the repo.
+
 - name: Install grubby
   yum:
     name: grubby
