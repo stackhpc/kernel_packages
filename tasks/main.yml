@@ -31,7 +31,12 @@
   grubby:
     version: "{{ kernel_version }}" # TODO document returns?
   register: grubby
-- name: "read yum.conf"
+- name: Disable kernel upgrades changing default boot kernel
+  replace:
+    dest: /etc/sysconfig/kernel
+    regexp: "^UPDATEDEFAULT="
+    replace: "# UPDATEDEFAULT=yes"
+- name: "Read yum.conf"
   ini_read:
     path: /etc/yum.conf
     section: main
