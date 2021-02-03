@@ -38,6 +38,7 @@ The following kernel versions may be used for `kernel_version`, depending on the
   - 4.18.0-193.14.2.el8_2.x86_64
   - 4.18.0-193.19.1.el8_2.x86_64
   - 4.18.0-193.28.1.el8_2.x86_64
+  - 4.18.0-193.el8.x86_64
 
 - Centos 8.1 (1911):
   - 4.18.0-147.0.3.el8_1.x86_64
