@@ -3,7 +3,11 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-import os, configparser
+import os
+try:
+    import configparser
+except ImportError:
+    import ConfigParser as configparser
 
 DOCUMENTATION = r'''
 ---
@@ -61,7 +65,7 @@ def run_module():
 
     config = configparser.ConfigParser()
     config.read(path)
-    result['config'] = dict((k, v) for k, v in config[section].items())
+    result['config'] = dict((k, v) for k, v in config.items(section))
     module.exit_json(**result)
 
 def main():
